@@ -6,17 +6,20 @@ import { wrapLog } from './wrapLog';
 
 const getConfig = (config?: Partial<ContractConfig>): ContractConfig => {
   let defaultId = 0;
-
+  const loggerMap: Record<string, Logger> = {};
   return {
     removeFields: ['password', 'token', 'accessToken'],
     debug: true,
     depth: 4,
     maxArrayLength: 30,
     getLogger(serviceName: string) {
-      return Logger.createLogger({
-        name: serviceName,
-        level: this.debug ? 'debug' : 'error',
-      });
+      if (!loggerMap[serviceName]) {
+        loggerMap[serviceName] = Logger.createLogger({
+          name: serviceName,
+          level: this.debug ? 'debug' : 'error',
+        });
+      }
+      return loggerMap[serviceName];
     },
     getNextId: () => ++defaultId,
     ...(config || {}),
@@ -54,7 +57,7 @@ export const contractProvider = (overrideConfig?: Partial<ContractConfig>): Cont
 
   function contract(
     signature: string,
-    params: string[],
+    params: any[],
     schema: Record<string, Joi.SchemaLike>,
     fn: () => any,
     overrideOptions?: Partial<ContractOptions>,

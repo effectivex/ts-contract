@@ -19,10 +19,10 @@ export type JoiPrimitiveSchema =
   | Joi.BooleanSchema
   | Joi.DateSchema;
 
-export type ExtractPrimitive<T> = T extends Joi.StringSchema<infer S_REQ>
-  ? (S_REQ extends true ? string : (string | undefined))
-  : T extends Joi.NumberSchema
-    ? number
+export type ExtractPrimitive<T> = T extends Joi.StringSchema<infer REQ>
+  ? (REQ extends true ? string : (string | undefined))
+  : T extends Joi.NumberSchema<infer REQ>
+    ? (REQ extends true ? number : (number | undefined))
     : T extends Joi.BooleanSchema ? boolean : T extends Joi.DateSchema ? Date : T;
 
 export type ConvertType<T> = T extends JoiPrimitiveSchema

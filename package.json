@@ -7,6 +7,9 @@
   "typings": "dist/types/ts-contract.d.ts",
   "files": ["dist"],
   "scripts": {
+    "example1": "ts-node examples/example1.ts | bunyan -o short",
+    "example2": "ts-node examples/example2.ts | bunyan -o short",
+    "example3": "ts-node examples/example3.ts | bunyan -o short",
     "lint": "tslint -t codeFrame 'src/**/*.ts' 'test/**/*.ts'",
     "prebuild": "rimraf dist",
     "build": "tsc -p . --declaration && cp src/joi.d.ts dist/types/joi.d.ts",
