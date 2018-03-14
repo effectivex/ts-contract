@@ -1,20 +1,18 @@
 {
   "name": "ts-contract",
-  "version": "0.0.7",
+  "version": "0.0.9",
   "description": "",
   "main": "dist/ts-contract.js",
   "module": "dist/ts-contract.js",
   "typings": "dist/types/ts-contract.d.ts",
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "scripts": {
     "example1": "ts-node examples/example1.ts | bunyan -o short",
     "example2": "ts-node examples/example2.ts | bunyan -o short",
     "example3": "ts-node examples/example3.ts | bunyan -o short",
     "lint": "tslint -t codeFrame 'src/**/*.ts' 'test/**/*.ts'",
     "prebuild": "rimraf dist",
-    "build": "tsc -p . --declaration && cp src/joi.d.ts dist/types/joi.d.ts",
+    "build": "tsc -p . --declaration && cp src/joi.d.ts dist/types/ && cp src/joi.js dist/",
     "jest": "jest",
     "test": "npm run lint && npm run jest -- --coverage --no-cache",
     "deploy-docs": "ts-node tools/gh-pages-publish"
@@ -32,18 +30,9 @@
     "transform": {
       ".(ts|tsx)": "<rootDir>/node_modules/ts-jest/preprocessor.js"
     },
-    "testMatch": [
-      "**/*.test.ts"
-    ],
-    "moduleFileExtensions": [
-      "ts",
-      "tsx",
-      "js"
-    ],
-    "coveragePathIgnorePatterns": [
-      "/node_modules/",
-      "/test/"
-    ],
+    "testMatch": ["**/*.test.ts"],
+    "moduleFileExtensions": ["ts", "tsx", "js"],
+    "coveragePathIgnorePatterns": ["/node_modules/", "/test/"],
     "coverageThreshold": {
       "global": {
         "branches": 90,
