@@ -1,0 +1,224 @@
+
+  
+  export type ExtractPrimitiveRequired<T> = 
+  T extends Joi.StringSchema<infer REQ>
+  ? (REQ extends true ? string : never)
+  : T extends Joi.NumberSchema<infer REQ>
+  ? (REQ extends true ? number : never)
+  : T extends Joi.BooleanSchema<infer REQ>
+  ? (REQ extends true ? boolean : never)
+  : T extends Joi.DateSchema<infer REQ>
+  ? (REQ extends true ? date : never)
+  : T;
+  
+  
+  export type ExtractPrimitiveOptional<T> = 
+  T extends Joi.StringSchema<infer REQ>
+  ? (REQ extends false ? string : never)
+  : T extends Joi.NumberSchema<infer REQ>
+  ? (REQ extends false ? number : never)
+  : T extends Joi.BooleanSchema<infer REQ>
+  ? (REQ extends false ? boolean : never)
+  : T extends Joi.DateSchema<infer REQ>
+  ? (REQ extends false ? date : never)
+  : T;
+  
+  
+
+export type ExtractObjectRequiredBase<T> =
+ { [K in keyof T]: ConvertTypeRequired<T[K]> };
+
+export type ExtractObjectRequired<T> = 
+FilterNever<ExtractObjectRequiredBase<T>>;
+
+export type ExtractObjectOptionalBase<T> =
+ { [K in keyof T]?: ConvertTypeOptional<T[K]> };
+
+export type ExtractObjectOptional<T> =
+ FilterNever<ExtractObjectOptionalBase<T>>;
+
+export type ExtractObject<T> =
+ Flatten<ExtractObjectRequired<T> & ExtractObjectOptional<T>>;
+ 
+ 
+  
+  export type ConvertTypeRequired<T> = T extends JoiPrimitiveSchema
+  ? ExtractPrimitiveRequired<T>
+  : T extends Joi.ArraySchema<infer REQ, infer K>
+    ? (REQ extends true ? Array<
+        K extends Joi.ObjectSchema<infer REQ, infer P>
+          ? (REQ extends true ? ExtractObject2<P> : never)
+          : ConvertTypeRequired2<K>
+      > : never)
+    : T extends Joi.ObjectSchema<infer REQ, infer K>
+      ? (REQ extends true ? ExtractObject2<K> : never)
+      : T;
+      
+  
+  export type ConvertTypeOptional<T> = T extends JoiPrimitiveSchema
+  ? ExtractPrimitiveOptional<T>
+  : T extends Joi.ArraySchema<infer REQ, infer K>
+    ? (REQ extends false ? Array<
+        K extends Joi.ObjectSchema<infer REQ, infer P>
+          ? (REQ extends false ? ExtractObject2<P> : never)
+          : ConvertTypeOptional2<K>
+      > : never)
+    : T extends Joi.ObjectSchema<infer REQ, infer K>
+      ? (REQ extends false ? ExtractObject2<K> : never)
+      : T;
+      
+
+
+export type ExtractObjectRequiredBase2<T> =
+ { [K in keyof T]: ConvertTypeRequired2<T[K]> };
+
+export type ExtractObjectRequired2<T> = 
+FilterNever<ExtractObjectRequiredBase2<T>>;
+
+export type ExtractObjectOptionalBase2<T> =
+ { [K in keyof T]?: ConvertTypeOptional2<T[K]> };
+
+export type ExtractObjectOptional2<T> =
+ FilterNever<ExtractObjectOptionalBase2<T>>;
+
+export type ExtractObject2<T> =
+ Flatten<ExtractObjectRequired2<T> & ExtractObjectOptional2<T>>;
+ 
+ 
+  
+  export type ConvertTypeRequired2<T> = T extends JoiPrimitiveSchema
+  ? ExtractPrimitiveRequired<T>
+  : T extends Joi.ArraySchema<infer REQ, infer K>
+    ? (REQ extends true ? Array<
+        K extends Joi.ObjectSchema<infer REQ, infer P>
+          ? (REQ extends true ? ExtractObject3<P> : never)
+          : ConvertTypeRequired3<K>
+      > : never)
+    : T extends Joi.ObjectSchema<infer REQ, infer K>
+      ? (REQ extends true ? ExtractObject3<K> : never)
+      : T;
+      
+  
+  export type ConvertTypeOptional2<T> = T extends JoiPrimitiveSchema
+  ? ExtractPrimitiveOptional<T>
+  : T extends Joi.ArraySchema<infer REQ, infer K>
+    ? (REQ extends false ? Array<
+        K extends Joi.ObjectSchema<infer REQ, infer P>
+          ? (REQ extends false ? ExtractObject3<P> : never)
+          : ConvertTypeOptional3<K>
+      > : never)
+    : T extends Joi.ObjectSchema<infer REQ, infer K>
+      ? (REQ extends false ? ExtractObject3<K> : never)
+      : T;
+      
+
+
+export type ExtractObjectRequiredBase3<T> =
+ { [K in keyof T]: ConvertTypeRequired3<T[K]> };
+
+export type ExtractObjectRequired3<T> = 
+FilterNever<ExtractObjectRequiredBase3<T>>;
+
+export type ExtractObjectOptionalBase3<T> =
+ { [K in keyof T]?: ConvertTypeOptional3<T[K]> };
+
+export type ExtractObjectOptional3<T> =
+ FilterNever<ExtractObjectOptionalBase3<T>>;
+
+export type ExtractObject3<T> =
+ Flatten<ExtractObjectRequired3<T> & ExtractObjectOptional3<T>>;
+ 
+ 
+  
+  export type ConvertTypeRequired3<T> = T extends JoiPrimitiveSchema
+  ? ExtractPrimitiveRequired<T>
+  : T extends Joi.ArraySchema<infer REQ, infer K>
+    ? (REQ extends true ? Array<
+        K extends Joi.ObjectSchema<infer REQ, infer P>
+          ? (REQ extends true ? ExtractObject4<P> : never)
+          : ConvertTypeRequired4<K>
+      > : never)
+    : T extends Joi.ObjectSchema<infer REQ, infer K>
+      ? (REQ extends true ? ExtractObject4<K> : never)
+      : T;
+      
+  
+  export type ConvertTypeOptional3<T> = T extends JoiPrimitiveSchema
+  ? ExtractPrimitiveOptional<T>
+  : T extends Joi.ArraySchema<infer REQ, infer K>
+    ? (REQ extends false ? Array<
+        K extends Joi.ObjectSchema<infer REQ, infer P>
+          ? (REQ extends false ? ExtractObject4<P> : never)
+          : ConvertTypeOptional4<K>
+      > : never)
+    : T extends Joi.ObjectSchema<infer REQ, infer K>
+      ? (REQ extends false ? ExtractObject4<K> : never)
+      : T;
+      
+
+
+export type ExtractObjectRequiredBase4<T> =
+ { [K in keyof T]: ConvertTypeRequired4<T[K]> };
+
+export type ExtractObjectRequired4<T> = 
+FilterNever<ExtractObjectRequiredBase4<T>>;
+
+export type ExtractObjectOptionalBase4<T> =
+ { [K in keyof T]?: ConvertTypeOptional4<T[K]> };
+
+export type ExtractObjectOptional4<T> =
+ FilterNever<ExtractObjectOptionalBase4<T>>;
+
+export type ExtractObject4<T> =
+ Flatten<ExtractObjectRequired4<T> & ExtractObjectOptional4<T>>;
+ 
+ 
+  
+  export type ConvertTypeRequired4<T> = T extends JoiPrimitiveSchema
+  ? ExtractPrimitiveRequired<T>
+  : T extends Joi.ArraySchema<infer REQ, infer K>
+    ? (REQ extends true ? Array<
+        K extends Joi.ObjectSchema<infer REQ, infer P>
+          ? (REQ extends true ? ExtractObject5<P> : never)
+          : ConvertTypeRequired5<K>
+      > : never)
+    : T extends Joi.ObjectSchema<infer REQ, infer K>
+      ? (REQ extends true ? ExtractObject5<K> : never)
+      : T;
+      
+  
+  export type ConvertTypeOptional4<T> = T extends JoiPrimitiveSchema
+  ? ExtractPrimitiveOptional<T>
+  : T extends Joi.ArraySchema<infer REQ, infer K>
+    ? (REQ extends false ? Array<
+        K extends Joi.ObjectSchema<infer REQ, infer P>
+          ? (REQ extends false ? ExtractObject5<P> : never)
+          : ConvertTypeOptional5<K>
+      > : never)
+    : T extends Joi.ObjectSchema<infer REQ, infer K>
+      ? (REQ extends false ? ExtractObject5<K> : never)
+      : T;
+      
+
+
+export type ExtractObjectRequiredBase5<T> =
+ { [K in keyof T]: ConvertTypeRequired5<T[K]> };
+
+export type ExtractObjectRequired5<T> = 
+FilterNever<ExtractObjectRequiredBase5<T>>;
+
+export type ExtractObjectOptionalBase5<T> =
+ { [K in keyof T]?: ConvertTypeOptional5<T[K]> };
+
+export type ExtractObjectOptional5<T> =
+ FilterNever<ExtractObjectOptionalBase5<T>>;
+
+export type ExtractObject5<T> =
+ Flatten<ExtractObjectRequired5<T> & ExtractObjectOptional5<T>>;
+ 
+ 
+  export type ConvertTypeRequired5<T> = T extends JoiPrimitiveSchema ? ExtractPrimitiveRequired<T> : T;
+
+  export type ConvertTypeOptional5<T> = T extends JoiPrimitiveSchema ? ExtractPrimitiveOptional<T> : T;
+
+  
