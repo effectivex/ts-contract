@@ -1,44 +1,44 @@
 import * as Joi from './joi';
 import { ConvertType, ExtractObject, ExtractObjectRequired } from './types';
 
-const schema = {
-  optionalString: Joi.string(),
-  requiredString: Joi.string().required(),
-};
-const a = Joi.string();
-type A = ConvertType<typeof a>;
-type StringData = ExtractObject<typeof schema>;
-const stringData: StringData = {
-  requiredString: 'str',
-  // optionalString: undefined,
-};
+// check string
+{
+  const schema = {
+    optionalString: Joi.string(),
+    requiredString: Joi.string().required(),
+  };
+  type StringData = ExtractObject<typeof schema>;
+  const stringData: StringData = {
+    requiredString: 'str',
+  };
 
-type NonNeverNames<T> = { [K in keyof T]: T[K] extends (null | undefined) ? never : K }[keyof T];
+  const stringData2: StringData = {
+    requiredString: 'str',
+    optionalString: 'str',
+  };
+}
 
-type BData = {
-  a: string;
-  b: string | undefined;
-  c: never;
-};
+// check number
+{
+  const schema = {
+    optionalNumber: Joi.number(),
+    requiredNumber: Joi.number().required(),
+  };
+  type StringData = ExtractObject<typeof schema>;
+  const data: StringData = {
+    requiredNumber: 1,
+  };
 
-const bdata: BData = {
-  a: 'str',
-  b: 'str',
-};
+  const data2: StringData = {
+    optionalNumber: 1,
+    requiredNumber: 2,
+  };
+}
 
-type ValueOf<T> = T[keyof T];
+// type A = { a: string } & { b: number };
 
-type B = NonNeverNames<BData>;
+// type B = { [K in keyof A]: A[K] };
 
-type FilterNever<T> = Pick<T, NonNeverNames<T>>;
+// const fn = (a: B) => 1;
 
-type C = FilterNever<BData>;
-
-// type C = NonNullable<BData>;
-// type D = keyof BData;
-// type E = ValueOf<BData>;
-// type F = Pick<BData, 'a' | 'b'>;
-
-// type GetRequired<T> = { [P in NonNullable<keyof T>]: NonNullable<T[P]> };
-
-// type G = GetRequired<BData>;
+// fn();

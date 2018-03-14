@@ -442,7 +442,7 @@ export interface State {
   reference?: any;
 }
 
-export interface BooleanSchema extends AnySchema {
+export interface BooleanSchema<REQ = false> extends AnySchema {
   /**
    * Allows for additional values to be considered valid booleans by converting them to true during validation.
    * Accepts a value or an array of values. String comparisons are by default case insensitive,
@@ -465,6 +465,16 @@ export interface BooleanSchema extends AnySchema {
    * @param enabled
    */
   insensitive(enabled?: boolean): this;
+
+  /**
+   * Marks a key as required which will not allow undefined as value. All keys are optional by default.
+   */
+  required(): BooleanSchema<true>;
+
+  /**
+   * Marks a key as optional which will allow undefined as values. Used to annotate the schema for readability as all keys are optional by default.
+   */
+  optional(): BooleanSchema<false>;
 }
 
 export interface NumberSchema<REQ extends boolean = false> extends AnySchema {
@@ -677,7 +687,7 @@ export interface StringSchema<REQ extends boolean = false> extends AnySchema {
   optional(): StringSchema<false>;
 }
 
-export interface ArraySchema<T = any> extends AnySchema {
+export interface ArraySchema<REQ = false, T = any> extends AnySchema {
   /**
    * Allow this array to be sparse.
    * enabled can be used with a falsy value to go back to the default behavior.
@@ -701,8 +711,8 @@ export interface ArraySchema<T = any> extends AnySchema {
    *
    * @param type - a joi schema object to validate each array item against.
    */
-  items<T extends SchemaLike>(...types: T[]): ArraySchema<T>;
-  items<T extends SchemaLike>(types: T[]): ArraySchema<T>;
+  items<T extends SchemaLike>(...types: T[]): ArraySchema<REQ, T>;
+  items<T extends SchemaLike>(types: T[]): ArraySchema<REQ, T>;
 
   /**
    * Lists the types in sequence order for the array values where:
@@ -734,13 +744,23 @@ export interface ArraySchema<T = any> extends AnySchema {
    */
   unique(comparator?: string): this;
   unique<T = any>(comparator?: (a: T, b: T) => boolean): this;
+
+  /**
+   * Marks a key as required which will not allow undefined as value. All keys are optional by default.
+   */
+  required(): ArraySchema<true, T>;
+
+  /**
+   * Marks a key as optional which will allow undefined as values. Used to annotate the schema for readability as all keys are optional by default.
+   */
+  optional(): ArraySchema<false, T>;
 }
 
-export interface ObjectSchema<T = any, REQ extends boolean = false> extends AnySchema {
+export interface ObjectSchema<REQ = false, T = any> extends AnySchema {
   /**
    * Sets the allowed object keys.
    */
-  keys<K extends SchemaMap>(schema: K): ObjectSchema<typeof schema, REQ>;
+  keys<K extends SchemaMap>(schema: K): ObjectSchema<REQ, typeof schema>;
 
   /**
    * Specifies the minimum number of keys in the object.
@@ -866,12 +886,12 @@ export interface ObjectSchema<T = any, REQ extends boolean = false> extends AnyS
   /**
    * Marks a key as required which will not allow undefined as value. All keys are optional by default.
    */
-  required(): ObjectSchema<T, true>;
+  required(): ObjectSchema<true, T>;
 
   /**
    * Marks a key as optional which will allow undefined as values. Used to annotate the schema for readability as all keys are optional by default.
    */
-  optional(): ObjectSchema<T, false>;
+  optional(): ObjectSchema<false, T>;
 }
 
 export interface BinarySchema extends AnySchema {
@@ -896,7 +916,7 @@ export interface BinarySchema extends AnySchema {
   length(limit: number): this;
 }
 
-export interface DateSchema extends AnySchema {
+export interface DateSchema<REQ = false> extends AnySchema {
   /**
    * Specifies the oldest date allowed.
    * Notes: 'now' can be passed in lieu of date so as to always compare relatively to the current date,
@@ -936,6 +956,16 @@ export interface DateSchema extends AnySchema {
    * @param type - the type of timestamp (allowed values are unix or javascript [default])
    */
   timestamp(type?: 'javascript' | 'unix'): this;
+
+  /**
+   * Marks a key as required which will not allow undefined as value. All keys are optional by default.
+   */
+  required(): DateSchema<true>;
+
+  /**
+   * Marks a key as optional which will allow undefined as values. Used to annotate the schema for readability as all keys are optional by default.
+   */
+  optional(): DateSchema<false>;
 }
 
 export interface FunctionSchema extends AnySchema {
@@ -1079,7 +1109,7 @@ export function number(): NumberSchema;
  */
 export function object<T extends SchemaMap>(
   schema?: T,
-): T extends undefined ? ObjectSchema : ObjectSchema<T>;
+): T extends undefined ? ObjectSchema : ObjectSchema<false, T>;
 
 /**
  * Generates a schema object that matches a string data type. Note that empty strings are not allowed by default and must be enabled with allow('').

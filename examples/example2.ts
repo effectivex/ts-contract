@@ -22,6 +22,7 @@ const createUser = contract(
     }).required(),
   },
   async values => {
+    // values.
     // do something with values
     // UserModel.create(values);
     const id = 1;
