@@ -1,0 +1,150 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should throw if signature is invalid 1`] = `"Invalid signature. Must be in format \\"service-name#method-name\\". Received \\"foo\\"."`;
+
+exports[`validate async function 1`] = `
+"{
+  \\"a\\" [31m[1][0m: -10
+}
+[31m
+[1] \\"a\\" must be a positive number[0m"
+`;
+
+exports[`validate async function 2`] = `
+Array [
+  Array [
+    Object {
+      "id": 1,
+    },
+    "ENTER fn:",
+    "{ a: 10 }",
+  ],
+  Array [
+    Object {
+      "id": 1,
+    },
+    " EXIT fn:",
+    "20",
+  ],
+  Array [
+    Object {
+      "id": 2,
+    },
+    "ENTER fn:",
+    "{ a: -10 }",
+  ],
+]
+`;
+
+exports[`validate async function 3`] = `
+Array [
+  Array [
+    Object {
+      "id": 2,
+    },
+    "ERROR fn: { a: -10 } 
+",
+    [ValidationError: {
+  "a" [31m[1][0m: -10
+}
+[31m
+[1] "a" must be a positive number[0m],
+  ],
+]
+`;
+
+exports[`validate sync function 1`] = `
+"{
+  \\"a\\" [31m[1][0m: -10
+}
+[31m
+[1] \\"a\\" must be a positive number[0m"
+`;
+
+exports[`validate sync function 2`] = `
+Array [
+  Array [
+    Object {
+      "id": 1,
+    },
+    "ENTER fn:",
+    "{ a: 10 }",
+  ],
+  Array [
+    Object {
+      "id": 1,
+    },
+    " EXIT fn:",
+    "20",
+  ],
+  Array [
+    Object {
+      "id": 2,
+    },
+    "ENTER fn:",
+    "{ a: -10 }",
+  ],
+]
+`;
+
+exports[`validate sync function 3`] = `
+Array [
+  Array [
+    Object {
+      "id": 2,
+    },
+    "ERROR fn: { a: -10 } 
+",
+    [ValidationError: {
+  "a" [31m[1][0m: -10
+}
+[31m
+[1] "a" must be a positive number[0m],
+  ],
+]
+`;
+
+exports[`validate sync with nested object 1`] = `
+"{
+  \\"params\\": {
+    \\"username\\": \\"baz\\",
+    \\"inner\\": {
+      \\"b\\" [31m[1][0m: -1
+    }
+  }
+}
+[31m
+[1] \\"b\\" must be larger than or equal to 0[0m"
+`;
+
+exports[`validate sync with nested object 2`] = `
+"{
+  \\"params\\": {
+    \\"inner\\": {
+      \\"b\\": 10
+    },
+    \\"username\\" [31m[1][0m: \\"b\\"
+  }
+}
+[31m
+[1] \\"username\\" length must be at least 2 characters long[0m"
+`;
+
+exports[`with removeOutput 1`] = `
+Array [
+  Array [
+    Object {
+      "id": 1,
+    },
+    "ENTER fn:",
+    "{ a: 10 }",
+  ],
+  Array [
+    Object {
+      "id": 1,
+    },
+    " EXIT fn:",
+    "<removed>",
+  ],
+]
+`;

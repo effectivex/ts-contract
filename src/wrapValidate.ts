@@ -2,7 +2,7 @@ import * as Joi from './joi';
 import { combineObject } from './combineObject';
 
 export interface WrapValidateOptions<T> {
-  keysSchema: { [s: string]: Joi.Schema };
+  keysSchema: { [s: string]: Joi.SchemaLike };
   method: T;
   paramNames: string[];
   sync: boolean;

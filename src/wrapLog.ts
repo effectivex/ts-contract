@@ -1,8 +1,7 @@
 import * as Logger from 'bunyan';
-import { Seq } from './Seq';
 import { combineObject } from './combineObject';
 import { serializeObject } from './serializeObject';
-import { Config } from './config';
+import { ContractConfig } from './types';
 
 export interface WrapLogOptions<T> {
   method: T;
@@ -10,32 +9,19 @@ export interface WrapLogOptions<T> {
   paramNames: string[];
   removeOutput: boolean;
   logger: Logger;
-  seq: Seq;
-  config: Config;
+  config: ContractConfig;
 }
 
-export function wrapLog<T extends (...args: any[]) => any>(
-  options: WrapLogOptions<T>,
-): T {
-  const {
-    method,
-    methodName,
-    paramNames,
-    removeOutput,
-    logger,
-    seq,
-    config,
-  } = options;
+export function wrapLog<T extends (...args: any[]) => any>(options: WrapLogOptions<T>): T {
+  const { method, methodName, paramNames, removeOutput, logger, config } = options;
 
   const logExit = (output: string, id: number) => {
-    const formattedOutput = removeOutput
-      ? '<removed>'
-      : serializeObject(config, output);
+    const formattedOutput = removeOutput ? '<removed>' : serializeObject(config, output);
     logger.debug({ id }, ` EXIT ${methodName}:`, formattedOutput);
     return output;
   };
   return (function logDecorator(...args: any[]) {
-    const id = seq.getNext();
+    const id = config.getNextId();
     const formattedInput = paramNames.length
       ? serializeObject(config, combineObject(paramNames, args))
       : '{ }';

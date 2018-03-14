@@ -1,5 +1,5 @@
 import * as util from 'util';
-import { Config } from './config';
+import { ContractConfig } from './types';
 
 /**
  * Remove invalid properties from the object and hide long arrays
@@ -7,7 +7,7 @@ import { Config } from './config';
  * @returns the new object with removed properties
  * @private
  */
-function _sanitizeObject(config: Config, obj: any) {
+function _sanitizeObject(config: ContractConfig, obj: any) {
   if (obj === undefined) {
     return obj;
   }
@@ -48,6 +48,6 @@ function _sanitizeObject(config: Config, obj: any) {
   );
 }
 
-export function serializeObject(config: Config, obj: any) {
+export function serializeObject(config: ContractConfig, obj: any) {
   return util.inspect(_sanitizeObject(config, obj), { depth: config.depth });
 }

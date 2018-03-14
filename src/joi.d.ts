@@ -467,7 +467,7 @@ export interface BooleanSchema extends AnySchema {
   insensitive(enabled?: boolean): this;
 }
 
-export interface NumberSchema extends AnySchema {
+export interface NumberSchema<REQ extends boolean = false> extends AnySchema {
   /**
    * Specifies the minimum value.
    * It can also be a reference to another field.
@@ -521,6 +521,16 @@ export interface NumberSchema extends AnySchema {
    * Requires the number to be negative.
    */
   negative(): this;
+
+  /**
+   * Marks a key as required which will not allow undefined as value. All keys are optional by default.
+   */
+  required(): NumberSchema<true>;
+
+  /**
+   * Marks a key as optional which will allow undefined as values. Used to annotate the schema for readability as all keys are optional by default.
+   */
+  optional(): NumberSchema<false>;
 }
 
 export interface StringSchema<REQ extends boolean = false> extends AnySchema<'string'> {
