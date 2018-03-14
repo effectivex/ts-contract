@@ -26,7 +26,7 @@ const getConfig = (config?: Partial<ContractConfig>): ContractConfig => {
   };
 };
 
-const getOptions = (options?: Partial<ContractOptions>): ContractOptions => {
+const getOptions = (options?: Partial<ContractOptions>) => {
   return {
     sync: false,
     removeOutput: false,

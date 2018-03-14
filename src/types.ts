@@ -25,6 +25,18 @@ export type ExtractPrimitive<T> = T extends Joi.StringSchema<infer REQ>
     ? (REQ extends true ? number : (number | undefined))
     : T extends Joi.BooleanSchema ? boolean : T extends Joi.DateSchema ? Date : T;
 
+export type ExtractPrimitiveRequired<T> = T extends Joi.StringSchema<infer REQ>
+  ? (REQ extends true ? string : never)
+  : T extends Joi.NumberSchema<infer REQ>
+    ? (REQ extends true ? number : never)
+    : T extends Joi.BooleanSchema ? boolean : T extends Joi.DateSchema ? Date : T;
+
+export type ExtractPrimitiveOptional<T> = T extends Joi.StringSchema<infer REQ>
+  ? (REQ extends false ? string : never)
+  : T extends Joi.NumberSchema<infer REQ>
+    ? (REQ extends false ? number : never)
+    : T extends Joi.BooleanSchema ? boolean : T extends Joi.DateSchema ? Date : T;
+
 export type ConvertType<T> = T extends JoiPrimitiveSchema
   ? ExtractPrimitive<T>
   : T extends Joi.ArraySchema<infer K>
@@ -37,11 +49,49 @@ export type ConvertType<T> = T extends JoiPrimitiveSchema
       ? (REQ extends true ? ExtractObject2<K> : (ExtractObject2<K> | undefined))
       : T;
 
-export type ExtractObject<T> = { [K in keyof T]: ConvertType<T[K]> };
+export type ConvertTypeRequired<T> = T extends JoiPrimitiveSchema
+  ? ExtractPrimitiveRequired<T>
+  : T extends Joi.ArraySchema<infer K>
+    ? Array<
+        K extends Joi.ObjectSchema<infer P, infer REQ>
+          ? (REQ extends true ? ExtractObject2<P> : (ExtractObject2<P> | undefined))
+          : ConvertType2<K>
+      >
+    : T extends Joi.ObjectSchema<infer K, infer REQ>
+      ? (REQ extends true ? ExtractObject2<K> : (ExtractObject2<K> | undefined))
+      : T;
+
+export type ConvertTypeOptional<T> = T extends JoiPrimitiveSchema
+  ? ExtractPrimitiveOptional<T>
+  : T extends Joi.ArraySchema<infer K>
+    ? Array<
+        K extends Joi.ObjectSchema<infer P, infer REQ>
+          ? (REQ extends true ? ExtractObject2<P> : (ExtractObject2<P> | undefined))
+          : ConvertType2<K>
+      >
+    : T extends Joi.ObjectSchema<infer K, infer REQ>
+      ? (REQ extends true ? ExtractObject2<K> : (ExtractObject2<K> | undefined))
+      : T;
+
+export type ExtractObjectOld<T> = { [K in keyof T]: ConvertType<T[K]> };
+
+export type NonNeverNames<T> = {
+  [K in keyof T]: T[K] extends (null | undefined) ? never : K
+}[keyof T];
+
+export type FilterNever<T> = Pick<T, NonNeverNames<T>>;
+
+export type ExtractObjectRequiredBase<T> = { [K in keyof T]: ConvertTypeRequired<T[K]> };
+export type ExtractObjectRequired<T> = FilterNever<ExtractObjectRequiredBase<T>>;
+
+export type ExtractObjectOptionalBase<T> = { [K in keyof T]?: ConvertTypeOptional<T[K]> };
+export type ExtractObjectOptional<T> = FilterNever<ExtractObjectOptionalBase<T>>;
+
+export type ExtractObject<T> = ExtractObjectRequired<T> & ExtractObjectOptional<T>;
 
 export interface ContractOptions {
-  sync: boolean;
-  removeOutput: boolean;
+  sync?: boolean;
+  removeOutput?: boolean;
 }
 
 export interface ContractConfig {
@@ -52,6 +102,17 @@ export interface ContractConfig {
   getLogger: (serviceName: string) => Logger;
   getNextId: () => number;
 }
+
+export type SetSync<T> = T extends true
+  ? (ContractOptions & { sync: true })
+  : (ContractOptions & { sync: false | undefined });
+
+export type MakeOptions<FN> = FN extends Promise<infer PT>
+  ? (SetSync<false> | undefined)
+  : SetSync<true>;
+
+type O = MakeOptions<Promise<void>>;
+type O2 = MakeOptions<number>;
 
 export interface Contract {
   <
@@ -72,7 +133,7 @@ export interface Contract {
     params: [ARG1, ARG2, ARG3, ARG4],
     schema: T,
     fn: FN,
-    options?: Partial<ContractOptions>,
+    options?: ContractOptions,
   ): FN;
 
   <
@@ -91,7 +152,7 @@ export interface Contract {
     params: [ARG1, ARG2, ARG3],
     schema: T,
     fn: FN,
-    options?: Partial<ContractOptions>,
+    options?: ContractOptions,
   ): FN;
 
   <
@@ -105,7 +166,7 @@ export interface Contract {
     params: [ARG1, ARG2],
     schema: T,
     fn: FN,
-    options?: Partial<ContractOptions>,
+    options?: ContractOptions,
   ): FN;
 
   <
@@ -118,7 +179,7 @@ export interface Contract {
     params: [ARG1],
     schema: T,
     fn: FN,
-    options?: Partial<ContractOptions>,
+    options?: ContractOptions,
   ): FN;
 
   <T extends {}, R, FN extends () => R>(
@@ -126,6 +187,6 @@ export interface Contract {
     params: undefined[],
     schema: T,
     fn: FN,
-    options?: Partial<ContractOptions>,
+    options?: ContractOptions,
   ): FN;
 }

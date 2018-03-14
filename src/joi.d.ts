@@ -533,7 +533,7 @@ export interface NumberSchema<REQ extends boolean = false> extends AnySchema {
   optional(): NumberSchema<false>;
 }
 
-export interface StringSchema<REQ extends boolean = false> extends AnySchema<'string'> {
+export interface StringSchema<REQ extends boolean = false> extends AnySchema {
   /**
    * Allows the value to match any whitelist of blacklist item in a case insensitive comparison.
    */
