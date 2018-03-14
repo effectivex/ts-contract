@@ -1,6 +1,6 @@
 
   
-  export type ExtractPrimitiveRequired<T> = 
+  export type ExtractPrimitive<T> = 
   T extends Joi.StringSchema<infer REQ>
   ? (REQ extends true ? string : never)
   : T extends Joi.NumberSchema<infer REQ>
@@ -8,7 +8,7 @@
   : T extends Joi.BooleanSchema<infer REQ>
   ? (REQ extends true ? boolean : never)
   : T extends Joi.DateSchema<infer REQ>
-  ? (REQ extends true ? date : never)
+  ? (REQ extends true ? Date : never)
   : T;
   
   
@@ -20,7 +20,19 @@
   : T extends Joi.BooleanSchema<infer REQ>
   ? (REQ extends false ? boolean : never)
   : T extends Joi.DateSchema<infer REQ>
-  ? (REQ extends false ? date : never)
+  ? (REQ extends false ? Date : never)
+  : T;
+  
+  
+  export type ExtractPrimitiveRequired<T> = 
+  T extends Joi.StringSchema<infer REQ>
+  ? (REQ extends true ? string : never)
+  : T extends Joi.NumberSchema<infer REQ>
+  ? (REQ extends true ? number : never)
+  : T extends Joi.BooleanSchema<infer REQ>
+  ? (REQ extends true ? boolean : never)
+  : T extends Joi.DateSchema<infer REQ>
+  ? (REQ extends true ? Date : never)
   : T;
   
   

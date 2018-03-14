@@ -5,7 +5,9 @@
   "main": "dist/ts-contract.js",
   "module": "dist/ts-contract.js",
   "typings": "dist/types/ts-contract.d.ts",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "example1": "ts-node examples/example1.ts | bunyan -o short",
     "example2": "ts-node examples/example2.ts | bunyan -o short",
@@ -30,9 +32,18 @@
     "transform": {
       ".(ts|tsx)": "<rootDir>/node_modules/ts-jest/preprocessor.js"
     },
-    "testMatch": ["**/*.test.ts"],
-    "moduleFileExtensions": ["ts", "tsx", "js"],
-    "coveragePathIgnorePatterns": ["/node_modules/", "/test/"],
+    "testMatch": [
+      "**/*.test.ts"
+    ],
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js"
+    ],
+    "coveragePathIgnorePatterns": [
+      "/node_modules/",
+      "/test/"
+    ],
     "coverageThreshold": {
       "global": {
         "branches": 90,
@@ -44,9 +55,9 @@
   },
   "homepage": "https://github.com/effectivex/ts-contract#readme",
   "devDependencies": {
+    "@types/bunyan": "^1.8.4",
     "@types/jest": "^22.0.0",
     "@types/node": "^9.3.0",
-    "@types/bunyan": "^1.8.4",
     "cross-env": "^5.0.1",
     "express": "^4.16.3",
     "jest": "^22.0.2",
@@ -55,7 +66,7 @@
     "ts-node": "^5.0.1",
     "tslint": "^5.8.0",
     "typedoc": "^0.11.0",
-    "typescript": "2.8.0-dev.20180308"
+    "typescript": "2.8.0-dev.20180314"
   },
   "dependencies": {
     "bunyan": "^1.8.12",

@@ -18,6 +18,18 @@ export type JoiPrimitiveSchema =
 
 export type Flatten<T> = { [K in keyof T]: T[K] };
 
+export type ConvertType<T> = T extends JoiPrimitiveSchema
+  ? ExtractPrimitive<T>
+  : T extends Joi.ArraySchema<infer REQ, infer K>
+    ? Array<
+        K extends Joi.ObjectSchema<infer REQ, infer P>
+          ? (REQ extends true ? ExtractObject2<P> : (ExtractObject2<P> | undefined))
+          : ConvertType2<K>
+      >
+    : T extends Joi.ObjectSchema<infer REQ, infer K>
+      ? (REQ extends true ? ExtractObject2<K> : (ExtractObject2<K> | undefined))
+      : T;
+
 /* Auto generated */
 
 export type ConvertType3<T> = T extends JoiPrimitiveSchema ? ExtractPrimitive<T> : T;
@@ -60,18 +72,6 @@ export type ExtractPrimitiveOptional<T> = T extends Joi.StringSchema<infer REQ>
 //   : T extends Joi.NumberSchema<infer REQ>
 //     ? (REQ extends false ? number : never)
 //     : T extends Joi.BooleanSchema ? boolean : T extends Joi.DateSchema ? Date : T;
-
-export type ConvertType<T> = T extends JoiPrimitiveSchema
-  ? ExtractPrimitive<T>
-  : T extends Joi.ArraySchema<infer REQ, infer K>
-    ? Array<
-        K extends Joi.ObjectSchema<infer REQ, infer P>
-          ? (REQ extends true ? ExtractObject2<P> : (ExtractObject2<P> | undefined))
-          : ConvertType2<K>
-      >
-    : T extends Joi.ObjectSchema<infer REQ, infer K>
-      ? (REQ extends true ? ExtractObject2<K> : (ExtractObject2<K> | undefined))
-      : T;
 
 export type ConvertTypeRequired<T> = T extends JoiPrimitiveSchema
   ? ExtractPrimitiveRequired<T>

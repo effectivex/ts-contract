@@ -42,35 +42,55 @@ const convertTypeBase = (required: boolean, num: number) => {
       `;
 };
 
-const extractPrimitive = (required: boolean) => {
-  const name = required ? 'Required' : 'Optional';
-  const value = required ? 'true' : 'false';
-  const match = (str: string) => `T extends Joi.${str}Schema<infer REQ>
-  ? (REQ extends ${value} ? ${str.toLowerCase()} : never)`;
+const extractPrimitive = (type: 'Required' | 'Optional' | 'Base') => {
+  const name = type === 'Base' ? '' : type;
+  const value = type === 'Optional' ? 'false' : 'true';
+  const match = (str: string, type: string) => `T extends Joi.${str}Schema<infer REQ>
+  ? (REQ extends ${value} ? ${type} : never)`;
   return `
   export type ExtractPrimitive${name}<T> = 
-  ${match('String')}
-  : ${match('Number')}
-  : ${match('Boolean')}
-  : ${match('Date')}
+  ${match('String', 'string')}
+  : ${match('Number', 'number')}
+  : ${match('Boolean', 'boolean')}
+  : ${match('Date', 'Date')}
   : T;
   `;
 };
 
 const convertType = (num: number) => {
+  const suffix = getSuffix(num);
+  const nextSuffix = getSuffix(num + 1);
+  const name = '';
+  const value = 'true';
+  const array = `Array<
+  K extends Joi.ObjectSchema<infer REQ, infer P>
+    ? (REQ extends ${value} ? ExtractObject${nextSuffix}<P> 
+      : (ExtractObject${nextSuffix}<P> | undefined))
+    : ConvertType${name}${nextSuffix}<K>
+>`;
   return `
-  ${convertTypeBase(true, num)}
-  ${convertTypeBase(false, num)}
-`;
+  export type ConvertType${name}${suffix}<T> = T extends JoiPrimitiveSchema
+  ? ExtractPrimitive${name}<T>
+  : T extends Joi.ArraySchema<infer REQ, infer K>
+    ? (REQ extends ${value} ? ${array} : (array | undefined))
+    : T extends Joi.ObjectSchema<infer REQ, infer K>
+      ? (REQ extends ${value} ? ExtractObject${nextSuffix}<K>
+         : (ExtractObject${nextSuffix}<K> | undefined))
+      : T;
+      `;
 };
 
 const convertTypeLast = (num: number) => {
   const suffix = getSuffix(num);
   return `
-  export type ConvertTypeRequired${suffix}<T> = T extends JoiPrimitiveSchema ? ExtractPrimitiveRequired<T> : T;
+  export type ConvertTypeRequired<T> = T extends JoiPrimitiveSchema ? ExtractPrimitiveRequired<T> : T;
 
-  export type ConvertTypeOptional${suffix}<T> = T extends JoiPrimitiveSchema ? ExtractPrimitiveOptional<T> : T;
 `;
+  //   return `
+  //   export type ConvertTypeRequired${suffix}<T> = T extends JoiPrimitiveSchema ? ExtractPrimitiveRequired<T> : T;
+
+  //   export type ConvertTypeOptional${suffix}<T> = T extends JoiPrimitiveSchema ? ExtractPrimitiveOptional<T> : T;
+  // `;
 };
 
 const getAllLevels = (current: number, max: number) => {
@@ -83,8 +103,9 @@ const getAllLevels = (current: number, max: number) => {
 
 function generate(levels: number) {
   return `
-  ${extractPrimitive(true)}
-  ${extractPrimitive(false)}
+  ${extractPrimitive('Base')}
+  ${extractPrimitive('Optional')}
+  ${extractPrimitive('Required')}
   ${getAllLevels(1, levels)}
   `;
 }

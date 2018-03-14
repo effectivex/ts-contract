@@ -19,9 +19,12 @@ const createUser = contract(
       password: Joi.string()
         .required()
         .min(5),
+      inner: Joi.object({ a: Joi.number() }),
     }).required(),
   },
   async values => {
+    // values.inner.a
+    // values.inner!.
     // values.
     // do something with values
     // UserModel.create(values);
@@ -29,12 +32,15 @@ const createUser = contract(
     return id;
   },
 );
-
+// crea
 async function test() {
   await createUser({
     name: 'john',
     email: 'john@example.com',
     password: 'secret',
+    inner: {
+      a: undefined,
+    },
   }); // ok
   await createUser({
     name: 'john',
