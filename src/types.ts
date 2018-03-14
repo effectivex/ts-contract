@@ -57,6 +57,46 @@ export interface Contract {
   <
     ARG1 extends string,
     ARG2 extends string,
+    ARG3 extends string,
+    ARG4 extends string,
+    T extends { [key in ARG1 | ARG2 | ARG3 | ARG4]: Joi.SchemaLike },
+    R,
+    FN extends (
+      arg1: ConvertType<T[ARG1]>,
+      arg2: ConvertType<T[ARG2]>,
+      arg3: ConvertType<T[ARG3]>,
+      arg4: ConvertType<T[ARG4]>,
+    ) => R
+  >(
+    signature: string,
+    params: [ARG1, ARG2, ARG3, ARG4],
+    schema: T,
+    fn: FN,
+    options?: Partial<ContractOptions>,
+  ): FN;
+
+  <
+    ARG1 extends string,
+    ARG2 extends string,
+    ARG3 extends string,
+    T extends { [key in ARG1 | ARG2 | ARG3]: Joi.SchemaLike },
+    R,
+    FN extends (
+      arg1: ConvertType<T[ARG1]>,
+      arg2: ConvertType<T[ARG2]>,
+      arg3: ConvertType<T[ARG3]>,
+    ) => R
+  >(
+    signature: string,
+    params: [ARG1, ARG2, ARG3],
+    schema: T,
+    fn: FN,
+    options?: Partial<ContractOptions>,
+  ): FN;
+
+  <
+    ARG1 extends string,
+    ARG2 extends string,
     T extends { [key in ARG1 | ARG2]: Joi.SchemaLike },
     R,
     FN extends (arg1: ConvertType<T[ARG1]>, arg2: ConvertType<T[ARG2]>) => R
@@ -67,6 +107,7 @@ export interface Contract {
     fn: FN,
     options?: Partial<ContractOptions>,
   ): FN;
+
   <
     ARG1 extends string,
     T extends { [key in ARG1]: Joi.SchemaLike },
@@ -79,6 +120,7 @@ export interface Contract {
     fn: FN,
     options?: Partial<ContractOptions>,
   ): FN;
+
   <T extends {}, R, FN extends () => R>(
     signature: string,
     params: undefined[],

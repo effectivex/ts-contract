@@ -197,17 +197,49 @@ const contract = contractProvider({
                                               // default: creates a logger with options {name: serviceName, level: this.debug ? 'debug' : 'error' }
   getNextId: () => number // a function to get the next service call id, default: function that returns sequence 1,2,3 ...
 })
+
+contract(
+  signature, // the method signature in format `serviceName#methodName`, example `UserService#register`
+  [param1, param2], // the names of the function parameters
+  {
+    param1: Joi.string()...,
+    param2: Joi.number()...,
+  }, // the validation rules for parameters
+  (para1, param2) => {...}, // the function to wrap
+  {
+    sync: true/false, // the flag if the flag is async (promise) or async. In sync mode errors are thrown, in async mode Promise.reject is returned. Default: false
+    removeOutput: true/false, // the flag if the output must be removed in the log, default: false
+  }
+)
+
 ```
 
-You must configure it, before creating any service.
 
-## Special properties
+### Special properties
 if the parameter name is `req` it's assumed that the object is an express request.  
 Only properties are logged: `method`, `url`, `headers`, `remoteAddress`, `remotePort`.  
 
 
 if the parameter name is `res` it's assumed that the object is an express response.  
 Only properties are logged: `statusCode`, `header`.  
+
+### Notes
+- The wrapped function must have 0-4 arguments. 
+- You can always override the inferred type. For example, if you need union types or more complex schema (e.g. alternatives).
+
+```ts
+const foo = contract(
+  'CalcService#foo',
+  ['str'],
+  {
+    str: Joi.string().only('admin', 'user').required(),
+  },
+  (str: 'admin' | 'user') => a + a,
+  { sync: true },
+);
+```
+- If there are any bugs in Joi annotations. Please open an issue and override the typings manually (see previous point).
+- Annotations for joi are custom. Do not install `@types/joi`.
 
 <!-- ### Docs
 [API Reference](https://effectivex.github.io/ts-contract/) -->
