@@ -10,6 +10,8 @@ export type NonNeverNames<T> = {
 
 export type FilterNever<T> = Pick<T, NonNeverNames<T>>;
 
+export type CheckREQ<REQ, T> = REQ extends true ? T : (T | undefined);
+
 export type JoiPrimitiveSchema =
   | Joi.StringSchema
   | Joi.NumberSchema
@@ -18,128 +20,89 @@ export type JoiPrimitiveSchema =
 
 export type Flatten<T> = { [K in keyof T]: T[K] };
 
+/* Auto generated */
+
+export type ExtractPrimitive<T> = T extends Joi.StringSchema<infer REQ>
+  ? CheckREQ<REQ, string>
+  : T extends Joi.NumberSchema<infer REQ>
+    ? CheckREQ<REQ, number>
+    : T extends Joi.BooleanSchema<infer REQ>
+      ? CheckREQ<REQ, boolean>
+      : T extends Joi.DateSchema<infer REQ> ? CheckREQ<REQ, Date> : T;
+
+export type ExtractObject<T> = { [K in keyof T]: ConvertType<T[K]> };
+
 export type ConvertType<T> = T extends JoiPrimitiveSchema
   ? ExtractPrimitive<T>
   : T extends Joi.ArraySchema<infer REQ, infer K>
-    ? Array<
-        K extends Joi.ObjectSchema<infer REQ, infer P>
-          ? (REQ extends true ? ExtractObject2<P> : (ExtractObject2<P> | undefined))
-          : ConvertType2<K>
+    ? CheckREQ<
+        REQ,
+        Array<
+          K extends Joi.ObjectSchema<infer REQ, infer P>
+            ? CheckREQ<REQ, ExtractObject2<P>>
+            : ConvertType2<K>
+        >
       >
-    : T extends Joi.ObjectSchema<infer REQ, infer K>
-      ? (REQ extends true ? ExtractObject2<K> : (ExtractObject2<K> | undefined))
-      : T;
+    : T extends Joi.ObjectSchema<infer REQ, infer K> ? CheckREQ<REQ, ExtractObject2<K>> : T;
 
-/* Auto generated */
-
-export type ConvertType3<T> = T extends JoiPrimitiveSchema ? ExtractPrimitive<T> : T;
+export type ExtractObject2<T> = ConvertObject<{ [K in keyof T]: ConvertType2<T[K]> }>;
 
 export type ConvertType2<T> = T extends JoiPrimitiveSchema
   ? ExtractPrimitive<T>
   : T extends Joi.ArraySchema<infer REQ, infer K>
-    ? Array<K extends Joi.ObjectSchema<infer REQ, infer P> ? ExtractObject3<P> : ConvertType3<K>>
-    : T extends Joi.ObjectSchema<infer REQ, infer K> ? ExtractObject3<K> : T;
+    ? CheckREQ<
+        REQ,
+        Array<
+          K extends Joi.ObjectSchema<infer REQ, infer P>
+            ? CheckREQ<REQ, ExtractObject3<P>>
+            : ConvertType3<K>
+        >
+      >
+    : T extends Joi.ObjectSchema<infer REQ, infer K> ? CheckREQ<REQ, ExtractObject3<K>> : T;
 
-// export type ExtractObject2<T> = { [K in keyof T]: ConvertType2<T[K]> };
 export type ExtractObject3<T> = { [K in keyof T]: ConvertType3<T[K]> };
 
-export type ExtractPrimitive<T> = T extends Joi.StringSchema<infer REQ>
-  ? (REQ extends true ? string : (string | undefined))
-  : T extends Joi.NumberSchema<infer REQ>
-    ? (REQ extends true ? number : (number | undefined))
-    : T extends Joi.BooleanSchema ? boolean : T extends Joi.DateSchema ? Date : T;
-
-export type ExtractPrimitiveRequired<T> = T extends Joi.StringSchema<infer REQ>
-  ? (REQ extends true ? string : never)
-  : T extends Joi.NumberSchema<infer REQ>
-    ? (REQ extends true ? number : never)
-    : T extends Joi.BooleanSchema ? boolean : T extends Joi.DateSchema ? Date : T;
-
-export type ExtractPrimitiveOptional<T> = T extends Joi.StringSchema<infer REQ>
-  ? (REQ extends false ? string : never)
-  : T extends Joi.NumberSchema<infer REQ>
-    ? (REQ extends false ? number : never)
-    : T extends Joi.BooleanSchema ? boolean : T extends Joi.DateSchema ? Date : T;
-
-// export type ExtractPrimitiveRequired2<T> = T extends Joi.StringSchema<infer REQ>
-//   ? (REQ extends true ? string : never)
-//   : T extends Joi.NumberSchema<infer REQ>
-//     ? (REQ extends true ? number : never)
-//     : T extends Joi.BooleanSchema ? boolean : T extends Joi.DateSchema ? Date : T;
-
-// export type ExtractPrimitiveOptional2<T> = T extends Joi.StringSchema<infer REQ>
-//   ? (REQ extends false ? string : never)
-//   : T extends Joi.NumberSchema<infer REQ>
-//     ? (REQ extends false ? number : never)
-//     : T extends Joi.BooleanSchema ? boolean : T extends Joi.DateSchema ? Date : T;
-
-export type ConvertTypeRequired<T> = T extends JoiPrimitiveSchema
-  ? ExtractPrimitiveRequired<T>
+export type ConvertType3<T> = T extends JoiPrimitiveSchema
+  ? ExtractPrimitive<T>
   : T extends Joi.ArraySchema<infer REQ, infer K>
-    ? Array<
-        K extends Joi.ObjectSchema<infer REQ, infer P>
-          ? (REQ extends true ? ExtractObject2<P> : (ExtractObject2<P> | undefined))
-          : ConvertType2<K>
+    ? CheckREQ<
+        REQ,
+        Array<
+          K extends Joi.ObjectSchema<infer REQ, infer P>
+            ? CheckREQ<REQ, ExtractObject4<P>>
+            : ConvertType4<K>
+        >
       >
-    : T extends Joi.ObjectSchema<infer REQ, infer K>
-      ? (REQ extends true ? ExtractObject2<K> : (ExtractObject2<K> | undefined))
-      : T;
+    : T extends Joi.ObjectSchema<infer REQ, infer K> ? CheckREQ<REQ, ExtractObject4<K>> : T;
 
-export type ConvertTypeOptional<T> = T extends JoiPrimitiveSchema
-  ? ExtractPrimitiveOptional<T>
-  : T extends Joi.ArraySchema<infer REQ, infer K>
-    ? Array<
-        K extends Joi.ObjectSchema<infer REQ, infer P>
-          ? (REQ extends true ? ExtractObject2<P> : (ExtractObject2<P> | undefined))
-          : ConvertType2<K>
-      >
-    : T extends Joi.ObjectSchema<infer REQ, infer K>
-      ? (REQ extends true ? ExtractObject2<K> : (ExtractObject2<K> | undefined))
-      : T;
+export type ExtractObject4<T> = { [K in keyof T]: ConvertType4<T[K]> };
 
-export type ConvertTypeRequired2<T> = T extends JoiPrimitiveSchema
-  ? ExtractPrimitiveRequired<T>
-  : T extends Joi.ArraySchema<infer REQ, infer K>
-    ? Array<
-        K extends Joi.ObjectSchema<infer REQ, infer P>
-          ? (REQ extends true ? ExtractObject3<P> : (ExtractObject3<P> | undefined))
-          : ConvertType2<K>
-      >
-    : T extends Joi.ObjectSchema<infer REQ, infer K>
-      ? (REQ extends true ? ExtractObject3<K> : (ExtractObject3<K> | undefined))
-      : T;
-
-export type ConvertTypeOptional2<T> = T extends JoiPrimitiveSchema
-  ? ExtractPrimitiveOptional<T>
-  : T extends Joi.ArraySchema<infer REQ, infer K>
-    ? Array<
-        K extends Joi.ObjectSchema<infer REQ, infer P>
-          ? (REQ extends true ? ExtractObject3<P> : (ExtractObject3<P> | undefined))
-          : ConvertType3<K>
-      >
-    : T extends Joi.ObjectSchema<infer REQ, infer K>
-      ? (REQ extends true ? ExtractObject3<K> : (ExtractObject3<K> | undefined))
-      : T;
-
-export type ExtractObjectOld<T> = { [K in keyof T]: ConvertType<T[K]> };
-
-export type ExtractObjectRequiredBase<T> = { [K in keyof T]: ConvertTypeRequired<T[K]> };
-export type ExtractObjectRequired<T> = FilterNever<ExtractObjectRequiredBase<T>>;
-
-export type ExtractObjectOptionalBase<T> = { [K in keyof T]?: ConvertTypeOptional<T[K]> };
-export type ExtractObjectOptional<T> = FilterNever<ExtractObjectOptionalBase<T>>;
-
-export type ExtractObject<T> = Flatten<ExtractObjectRequired<T> & ExtractObjectOptional<T>>;
-
-export type ExtractObjectRequiredBase2<T> = { [K in keyof T]: ConvertTypeRequired2<T[K]> };
-export type ExtractObjectRequired2<T> = FilterNever<ExtractObjectRequiredBase2<T>>;
-
-export type ExtractObjectOptionalBase2<T> = { [K in keyof T]?: ConvertTypeOptional2<T[K]> };
-export type ExtractObjectOptional2<T> = FilterNever<ExtractObjectOptionalBase2<T>>;
-
-export type ExtractObject2<T> = Flatten<ExtractObjectRequired2<T> & ExtractObjectOptional2<T>>;
+export type ConvertType4<T> = T extends JoiPrimitiveSchema ? ExtractPrimitive<T> : T;
 
 /* Auto generated END */
+
+// DEEP Convert
+
+export type Convert<T> = ConvertType<T>;
+
+export type NonFunctionProp<T> = T extends Function ? never : T;
+
+export type OptionalPropNames<T> = { [P in keyof T]: undefined extends T[P] ? P : never }[keyof T];
+
+export type RequiredPropNames<T> = { [P in keyof T]: undefined extends T[P] ? never : P }[keyof T];
+
+export type OptionalProps<T> = { [P in OptionalPropNames<T>]: T[P] };
+export type RequiredProps<T> = { [P in RequiredPropNames<T>]: T[P] };
+
+export type MakeOptional<T> = { [P in keyof T]?: T[P] };
+
+export type ConvertObject<T> = Flatten<MakeOptional<OptionalProps<T>> & RequiredProps<T>>;
+
+export type DeepConvertObject<T> = T extends Array<any>
+  ? T
+  : ConvertObject<{ [P in keyof T]: DeepConvert<T[P]> }>;
+
+export type DeepConvert<T> = T extends object ? DeepConvertObject<T> : T;
 
 export interface ContractOptions {
   sync?: boolean;
@@ -175,10 +138,10 @@ export interface Contract {
     T extends { [key in ARG1 | ARG2 | ARG3 | ARG4]: Joi.SchemaLike },
     R,
     FN extends (
-      arg1: ConvertType<T[ARG1]>,
-      arg2: ConvertType<T[ARG2]>,
-      arg3: ConvertType<T[ARG3]>,
-      arg4: ConvertType<T[ARG4]>,
+      arg1: Convert<T[ARG1]>,
+      arg2: Convert<T[ARG2]>,
+      arg3: Convert<T[ARG3]>,
+      arg4: Convert<T[ARG4]>,
     ) => R
   >(
     signature: string,
@@ -194,11 +157,7 @@ export interface Contract {
     ARG3 extends string,
     T extends { [key in ARG1 | ARG2 | ARG3]: Joi.SchemaLike },
     R,
-    FN extends (
-      arg1: ConvertType<T[ARG1]>,
-      arg2: ConvertType<T[ARG2]>,
-      arg3: ConvertType<T[ARG3]>,
-    ) => R
+    FN extends (arg1: Convert<T[ARG1]>, arg2: Convert<T[ARG2]>, arg3: Convert<T[ARG3]>) => R
   >(
     signature: string,
     params: [ARG1, ARG2, ARG3],
@@ -212,7 +171,7 @@ export interface Contract {
     ARG2 extends string,
     T extends { [key in ARG1 | ARG2]: Joi.SchemaLike },
     R,
-    FN extends (arg1: ConvertType<T[ARG1]>, arg2: ConvertType<T[ARG2]>) => R
+    FN extends (arg1: Convert<T[ARG1]>, arg2: Convert<T[ARG2]>) => R
   >(
     signature: string,
     params: [ARG1, ARG2],
@@ -225,7 +184,7 @@ export interface Contract {
     ARG1 extends string,
     T extends { [key in ARG1]: Joi.SchemaLike },
     R,
-    FN extends (arg1: ConvertType<T[ARG1]>) => R
+    FN extends (arg1: Convert<T[ARG1]>) => R
   >(
     signature: string,
     params: [ARG1],
